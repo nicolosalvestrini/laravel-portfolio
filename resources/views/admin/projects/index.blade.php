@@ -2,40 +2,6 @@
 
 @section('title', 'Progetti')
 
-@section('styles')
-<style>
-    .project-card {
-        border: 0;
-        border-radius: 18px;
-        overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .project-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 14px 30px rgba(17, 24, 39, 0.1);
-    }
-
-    .project-cover {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
-    }
-
-    .project-cover-placeholder {
-        width: 100%;
-        height: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        color: white;
-        background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
-    }
-</style>
-@endsection
-
 @section('content')
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
@@ -50,58 +16,107 @@
     </div>
 
     <div class="mt-3 mt-md-0">
-        <a href="#" class="btn text-white fw-semibold px-4"
+        <a href="{{ route('admin.projects.create') }}" class="btn text-white fw-semibold px-4"
             style="background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));">
             + Nuovo progetto
         </a>
     </div>
 </div>
 
-@if ($projects->isEmpty())
+@if (session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
 <section class="card content-card shadow-sm">
-    <div class="card-body p-5 text-center text-secondary">
-        Nessun progetto presente al momento.
-    </div>
-</section>
-@else
-<div class="row g-4">
-    @foreach ($projects as $project)
-    <div class="col-12 col-sm-6 col-xl-4">
-        <a href="{{ route('admin.projects.show', $project) }}"
-            class="text-decoration-none text-reset">
-            <div class="card project-card shadow-sm h-100">
-                @if ($project->cover_image)
-                <img
-                    src="{{ asset('storage/' . $project->cover_image) }}"
-                    alt="{{ $project->title }}"
-                    class="project-cover">
-                @else
-                <div class="project-cover-placeholder">
-                    ▣
-                </div>
-                @endif
+    <div class="card-body p-0">
+        @if ($projects->isEmpty())
+        <div class="p-5 text-center text-secondary">
+            Nessun progetto presente al momento.
+        </div>
+        @else
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Progetto</th>
+                        <th>Data completamento</th>
+                        <th class="text-end pe-4">Azioni</th>
+                    </tr>
+                </thead>
 
-                <div class="card-body p-4">
-                    <h3 class="h5 fw-bold mb-2">
-                        {{ $project->title }}
-                    </h3>
+                <tbody>
+                    @foreach ($projects as $project)
+                    <tr>
+                        <td class="ps-4">
+                            <a href="{{ route('admin.projects.show', $project) }}"
+                                class="fw-semibold text-decoration-none text-reset">
+                                {{ $project->title }}
+                            </a>
+                        </td>
 
-                    <p class="text-secondary small mb-3">
-                        {{ Str::limit($project->description, 90) }}
-                    </p>
+                        <td class="text-secondary">
+                            {{ $project->completed_at ? $project->completed_at->format('d/m/Y') : '—' }}
+                        </td>
 
-                    @if ($project->completed_at)
-                    <span class="badge bg-primary-subtle text-primary">
-                        {{ $project->completed_at->format('d/m/Y') }}
-                    </span>
-                    @endif
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('admin.projects.edit', $project) }}"
+                                    class="btn btn-sm btn-outline-secondary">
+                                    Modifica
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ $project->id }}">
+                                    Elimina
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Modal di eliminazione, uno per progetto, tenuti FUORI dalla tabella --}}
+        @foreach ($projects as $project)
+        <div class="modal fade" id="deleteModal{{ $project->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Conferma eliminazione</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        Sei sicuro di voler eliminare il progetto <strong>{{ $project->title }}</strong>?
+                        L'operazione non è reversibile.
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Annulla
+                        </button>
+
+                        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">
+                                Elimina definitivamente
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </a>
+        </div>
+        @endforeach
+        @endif
     </div>
-    @endforeach
-</div>
+</section>
 
+@if (! $projects->isEmpty())
 <div class="mt-4">
     {{ $projects->links() }}
 </div>

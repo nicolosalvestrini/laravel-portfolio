@@ -2,29 +2,6 @@
 
 @section('title', $project->title)
 
-@section('styles')
-<style>
-    .project-hero {
-        width: 100%;
-        max-height: 380px;
-        object-fit: cover;
-        border-radius: 18px;
-    }
-
-    .project-hero-placeholder {
-        width: 100%;
-        height: 260px;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-        color: white;
-        background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
-    }
-</style>
-@endsection
-
 @section('content')
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
@@ -39,11 +16,13 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex gap-2">
-        <a href="#" class="btn btn-outline-secondary fw-semibold px-4">
+        <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-outline-secondary fw-semibold px-4">
             Modifica
         </a>
 
-        <form action="#" method="POST" onsubmit="return confirm('Eliminare questo progetto?');">
+        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Eliminare questo progetto?');">
+            @csrf
+            @method('DELETE')
             <button type="submit" class="btn btn-outline-danger fw-semibold px-4">
                 Elimina
             </button>
@@ -51,21 +30,14 @@
     </div>
 </div>
 
+@if (session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
 <div class="row g-4">
     <div class="col-12 col-xl-8">
         <section class="card content-card shadow-sm mb-4">
             <div class="card-body p-4">
-                @if ($project->cover_image)
-                <img
-                    src="{{ asset('storage/' . $project->cover_image) }}"
-                    alt="{{ $project->title }}"
-                    class="project-hero mb-4">
-                @else
-                <div class="project-hero-placeholder mb-4">
-                    ▣
-                </div>
-                @endif
-
                 <h2 class="h5 fw-bold mb-3">Descrizione</h2>
 
                 <p class="text-secondary mb-0">
