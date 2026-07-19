@@ -13,7 +13,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+         $projects = Project::orderByDesc('created_at')
+            ->paginate(10);
+
+        return view('admin.projects.index', compact('projects'));
     }
 
     /**
@@ -21,10 +24,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $projects = Project::orderByDesc('created_at')
-            ->paginate(10);
-
-        return view('admin.projects.index', compact('projects'));
+       
     }
 
     /**

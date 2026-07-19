@@ -6,7 +6,9 @@
         <span>Dashboard</span>
     </a>
 
-    <a href="#" class="sidebar-link">
+    <a
+        href="{{ route('admin.projects.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
         <span class="sidebar-icon">▣</span>
         <span>Progetti</span>
     </a>
