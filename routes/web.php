@@ -20,12 +20,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])
-->prefix('admin')
-->name('admin.')
-->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('projects', ProjectController::class)
-            ->only(['index', 'show']);
-});
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('projects', ProjectController::class);
+    });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
