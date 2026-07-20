@@ -23,6 +23,18 @@
         class="form-control">{{ $project->description ?? '' }}</textarea>
 </div>
 
+<div class="mb-3">
+    <label for="type_id" class="form-label fw-semibold">Tipologia</label>
+    <select name="type_id" id="type_id" class="form-select">
+        <option value="">Seleziona una tipologia</option>
+        @foreach ($types as $type)
+        <option value="{{ $type->id }}" {{ (isset($project) && $project->type_id == $type->id) ? 'selected' : '' }}>
+            {{ $type->name }}
+        </option>
+        @endforeach
+    </select>
+</div>
+
 <div class="row g-3">
     <div class="col-12 col-md-6">
         <label for="github_url" class="form-label fw-semibold">URL GitHub</label>

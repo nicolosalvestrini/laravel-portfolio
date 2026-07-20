@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Type;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -17,7 +18,9 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('admin.projects.create');
+        $types = Type::orderBy('name')->get();
+
+        return view('admin.projects.create', compact('types'));
     }
 
     public function store(Request $request)
@@ -36,7 +39,9 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $types = Type::orderBy('name')->get();
+
+        return view('admin.projects.edit', compact('project', 'types'));
     }
 
     public function update(Request $request, Project $project)
