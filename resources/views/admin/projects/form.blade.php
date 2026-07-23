@@ -35,6 +35,30 @@
     </select>
 </div>
 
+<div class="mb-3">
+    <label class="form-label fw-semibold d-block">Tecnologie</label>
+
+    <div class="row">
+        @foreach ($technologies as $technology)
+        <div class="col-6 col-md-4">
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    name="technology_ids[]"
+                    value="{{ $technology->id }}"
+                    id="technology_{{ $technology->id }}"
+                    class="form-check-input"
+                    {{ (isset($project) && $project->technologies->contains($technology->id)) ? 'checked' : '' }}>
+
+                <label class="form-check-label" for="technology_{{ $technology->id }}">
+                    {{ $technology->name }}
+                </label>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
 <div class="row g-3">
     <div class="col-12 col-md-6">
         <label for="github_url" class="form-label fw-semibold">URL GitHub</label>

@@ -13,11 +13,13 @@
         <span>Progetti</span>
     </a>
 
-    <a href="#" class="sidebar-link">
+    <a
+        href="{{ route('admin.technologies.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.technologies.*') ? 'active' : '' }}">
         <span class="sidebar-icon">◆</span>
         <span>Tecnologie</span>
     </a>
-
+    
     <a href="#" class="sidebar-link">
         <span class="sidebar-icon">✉</span>
         <span>Messaggi</span>

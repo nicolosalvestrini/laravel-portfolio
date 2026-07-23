@@ -81,7 +81,7 @@
                     @endif
                 </div>
 
-                <div class="mb-0">
+                <div class="mb-3">
                     <small class="text-secondary d-block mb-1">Link progetto</small>
                     @if ($project->project_url)
                     <a href="{{ $project->project_url }}" target="_blank" rel="noopener" class="fw-semibold">
@@ -91,6 +91,19 @@
                     <span class="text-secondary">Non disponibile</span>
                     @endif
                 </div>
+
+                <div class="mb-0">
+                    <small class="text-secondary d-block mb-2">Tecnologie</small>
+
+                    @forelse ($project->technologies as $technology)
+                    <span class="badge bg-secondary-subtle text-secondary me-1 mb-1">
+                        {{ $technology->name }}
+                    </span>
+                    @empty
+                    <span class="text-secondary">Nessuna tecnologia associata</span>
+                    @endforelse
+                </div>
+
             </div>
         </section>
     </div>

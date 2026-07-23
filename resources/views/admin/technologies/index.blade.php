@@ -1,24 +1,24 @@
 @extends('layouts.admin')
 
-@section('title', 'Progetti')
+@section('title', 'Tecnologie')
 
 @section('content')
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
     <div>
         <h1 class="h3 fw-bold text-dark mb-1">
-            Progetti
+            Tecnologie
         </h1>
 
         <p class="text-secondary mb-0">
-            Gestisci i progetti del tuo portfolio.
+            Gestisci le tecnologie usate nei progetti.
         </p>
     </div>
 
     <div class="mt-3 mt-md-0">
-        <a href="{{ route('admin.projects.create') }}" class="btn text-white fw-semibold px-4"
+        <a href="{{ route('admin.technologies.create') }}" class="btn text-white fw-semibold px-4"
             style="background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));">
-            + Nuovo progetto
+            + Nuova tecnologia
         </a>
     </div>
 </div>
@@ -29,59 +29,30 @@
 
 <section class="card content-card shadow-sm">
     <div class="card-body p-0">
-        @if ($projects->isEmpty())
+        @if ($technologies->isEmpty())
         <div class="p-5 text-center text-secondary">
-            Nessun progetto presente al momento.
+            Nessuna tecnologia presente al momento.
         </div>
         @else
         <div class="table-responsive">
             <table class="table align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Progetto</th>
-                        <th>Tipologia</th>
-                        <th>Data completamento</th>
+                        <th class="ps-4">Nome</th>
                         <th class="text-end pe-4">Azioni</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($projects as $project)
+                    @foreach ($technologies as $technology)
                     <tr>
-                        <td class="ps-4">
-                            <a href="{{ route('admin.projects.show', $project) }}"
-                                class="fw-semibold text-decoration-none text-reset">
-                                {{ $project->title }}
-                            </a>
-                        </td>
-
-                        <td>
-                            @if ($project->type)
-                            <span class="badge bg-primary-subtle text-primary">
-                                {{ $project->type->name }}
-                            </span>
-                            @else
-                            <span class="text-secondary small">—</span>
-                            @endif
-                        </td>
-
-                        <td>
-                            @forelse ($project->technologies as $technology)
-                            <span class="badge bg-secondary-subtle text-secondary me-1">
-                                {{ $technology->name }}
-                            </span>
-                            @empty
-                            <span class="text-secondary small">—</span>
-                            @endforelse
-                        </td>
-
-                        <td class="text-secondary">
-                            {{ $project->completed_at ? $project->completed_at->format('d/m/Y') : '—' }}
+                        <td class="ps-4 fw-semibold">
+                            {{ $technology->name }}
                         </td>
 
                         <td class="text-end pe-4">
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('admin.projects.edit', $project) }}"
+                                <a href="{{ route('admin.technologies.edit', $technology) }}"
                                     class="btn btn-sm btn-outline-secondary">
                                     Modifica
                                 </a>
@@ -90,7 +61,7 @@
                                     type="button"
                                     class="btn btn-sm btn-outline-danger"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal{{ $project->id }}">
+                                    data-bs-target="#deleteModal{{ $technology->id }}">
                                     Elimina
                                 </button>
                             </div>
@@ -101,9 +72,8 @@
             </table>
         </div>
 
-        {{-- Modal di eliminazione, uno per progetto, tenuti FUORI dalla tabella --}}
-        @foreach ($projects as $project)
-        <div class="modal fade" id="deleteModal{{ $project->id }}" tabindex="-1" aria-hidden="true">
+        @foreach ($technologies as $technology)
+        <div class="modal fade" id="deleteModal{{ $technology->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -112,8 +82,8 @@
                     </div>
 
                     <div class="modal-body">
-                        Sei sicuro di voler eliminare il progetto <strong>{{ $project->title }}</strong>?
-                        L'operazione non è reversibile.
+                        Sei sicuro di voler eliminare la tecnologia <strong>{{ $technology->name }}</strong>?
+                        Verrà rimossa anche da tutti i progetti a cui è associata.
                     </div>
 
                     <div class="modal-footer">
@@ -121,7 +91,7 @@
                             Annulla
                         </button>
 
-                        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST">
+                        <form action="{{ route('admin.technologies.destroy', $technology) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">
@@ -136,11 +106,5 @@
         @endif
     </div>
 </section>
-
-@if (! $projects->isEmpty())
-<div class="mt-4">
-    {{ $projects->links() }}
-</div>
-@endif
 
 @endsection

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Technology;
 use App\Models\Project;
 use Illuminate\Database\Seeder;
 
@@ -53,9 +54,13 @@ class ProjectSeeder extends Seeder
         ];
 
         foreach ($projects as $project) {
-            Project::updateOrCreate(
+            $createdProject = Project::updateOrCreate(
                 ['github_url' => $project['github_url']],
                 $project
+            );
+
+            $createdProject->technologies()->sync(
+                Technology::inRandomOrder()->take(3)->pluck('id')
             );
         }
     }
