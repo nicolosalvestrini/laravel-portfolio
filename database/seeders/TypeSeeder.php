@@ -1,7 +1,5 @@
 <?php
 
-<?php
-
 namespace Database\Seeders;
 
 use App\Models\Type;
@@ -20,5 +18,8 @@ class TypeSeeder extends Seeder
             'Mobile',
         ];
 
+        foreach ($types as $type) {
+            Type::updateOrCreate(['name' => $type]);
+        }
     }
 }

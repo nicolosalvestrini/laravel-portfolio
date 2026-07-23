@@ -39,6 +39,7 @@
                 <thead>
                     <tr>
                         <th class="ps-4">Progetto</th>
+                        <th>Tipologia</th>
                         <th>Data completamento</th>
                         <th class="text-end pe-4">Azioni</th>
                     </tr>
@@ -52,6 +53,16 @@
                                 class="fw-semibold text-decoration-none text-reset">
                                 {{ $project->title }}
                             </a>
+                        </td>
+
+                        <td>
+                            @if ($project->type)
+                            <span class="badge bg-primary-subtle text-primary">
+                                {{ $project->type->name }}
+                            </span>
+                            @else
+                            <span class="text-secondary small">—</span>
+                            @endif
                         </td>
 
                         <td class="text-secondary">

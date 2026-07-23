@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.home');
+    return redirect()->route('admin.dashboard');
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {

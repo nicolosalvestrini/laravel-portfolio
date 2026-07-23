@@ -53,6 +53,17 @@
                 <h2 class="h5 fw-bold mb-4">Dettagli</h2>
 
                 <div class="mb-3">
+                    <small class="text-secondary d-block mb-1">Tipologia</small>
+                    @if ($project->type)
+                    <span class="badge bg-primary-subtle text-primary">
+                        {{ $project->type->name }}
+                    </span>
+                    @else
+                    <span class="text-secondary">Non specificata</span>
+                    @endif
+                </div>
+
+                <div class="mb-3">
                     <small class="text-secondary d-block mb-1">Data completamento</small>
                     <span class="fw-semibold">
                         {{ $project->completed_at ? $project->completed_at->format('d/m/Y') : 'Non specificata' }}
